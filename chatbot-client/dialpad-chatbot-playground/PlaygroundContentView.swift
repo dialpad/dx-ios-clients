@@ -17,14 +17,20 @@ struct PlaygroundContentView: View {
     @StateObject fileprivate var viewModel = PlaygroundViewModel()
     
     var body: some View {
-        ZStack(alignment: .bottom) {
+        ZStack(alignment: .top) {
             if !viewModel.isOpen {
                 Button(action: {
                     viewModel.open()
                 }) {
-                    AsyncImage(url: URL(string: fabIconUrl))
-                        .scaledToFit()
-                        .frame(width: 80, height: 80)
+                    VStack(alignment: .trailing) {
+                        Image("m.help.dialpad.com")
+                            .scaledToFit()
+                            .overlay(content: {
+                                AsyncImage(url: URL(string: fabIconUrl))
+                                    .scaledToFit()
+                                    .frame(width: 80, height: 80)
+                            })
+                    }
                 }
                 .disabled(viewModel.isOpen)
             }

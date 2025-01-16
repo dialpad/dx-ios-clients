@@ -5,9 +5,9 @@
 
 ### iOS
 
-`chatbot-client` is supported in the native iOS apps via `WKWebView`. We also provide an iOS sample app, which can be downloaded from our help pages. The sample app comes with a ready-to-use `SwiftUI` code that can be used as-is in some iOS versions.
+`chatbot-client` is supported in the native iOS apps via `WKWebView`. We also provide an iOS sample app, which can be downloaded from our help pages. The sample app comes with a `SwiftUI` code that can be used as-is in some iOS versions.
 
-![Native iOS app - Ai Chatbot web app](./src/localdev/assets/native.ios.support.jpg)
+![Native iOS app - Ai Chatbot web app](./documents/native.ios.support.jpg)
 
 #### Supported features
 
@@ -53,24 +53,21 @@ NotificationCenter.default.post(
 &#9744; Chatbot experience in landscope mode. <br />
 &#9744; Network interruptions. <br />
 &#9744; Handling app sent to background. <br />
-&#9744; Handling app brought to background. <br />
+&#9744; Handling app brought from the background. <br />
 
 #### Getting started with iOS integration
 
 1. Get the companion code from `dx-native-clients` repo or Dialpad help pages.
 2. Open or unzip the project named `dialpad-chatbot-playground` in a Xcode editor.
-3. Locate the subdirectory named `DialpadChatbot`. It should contain the following two `Swift` files -
+3. Locate the subdirectory named `DialpadChatbot`. It should contain the following two `Swift` file:
 
-- `DCWebView.swift`
-- `DCNotificationCenter.swift`
+- `DialpadChatbot.swift`
 
 4. Copy and paste the `DialpadChatbot` directory and its contents into your app project.
-5. Add your own presentation logic to launch the chatbot.
+5. Add your own presentation logic to launch the chatbot. Simply initialize the `DialpadChatbot` using your `Short Link`:
 
 ```swift
-DialpadChatbot(
-    url: "http://localhost:8001/public/index.html?channelid=3f3fd91bc5bf4e9ab56e53c516933337&provemail=5646620347596800@dialpad.com&site=lighthouse&env=local&native=ios"
-)
+DialpadChatbot(url: "https://s.dx.dialpad.com/qebPJbX8n71aYMD97")
 ```
 
 ### Android
