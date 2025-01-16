@@ -1,11 +1,30 @@
-import Foundation
 import SwiftUI
-import UIKit
 import WebKit
 
 /**
+ * @public
+ * @documentation: a subset of Message Bus events supported by the native iOS app.
+ *  supported events are:
+ *  - incoming event CHATBOT_SESSION_STARTED
+ *  - incoming event CHATBOT_SESSION_ENDED
+ *  - outgoing event END_CHATBOT_SESSION
+ */
+extension Notification.Name {
+    //  @incoming: a chatbot session has started
+    static let chatbotSessionStarted = Notification.Name("CHATBOT_SESSION_STARTED")
+
+    //  @incoming: the chatbot session has ended, but the Vue app instance is alive
+    static let chatbotSessionEnded = Notification.Name("CHATBOT_SESSION_ENDED")
+
+    //  @outgoing: end the chatbot session, but keep the Vue app instance alive
+    static let endChatbotSession = Notification.Name("END_CHATBOT_SESSION")
+}
+
+/**
  * @fileprivate
- * @documentation
+ * @documentation: a custom UIViewRepresentable that implements the crux of native
+ *  app and webview loading and communications. Note that this code must be implemented
+ *  by the customer's native app for any cross-context communications.
  */
 fileprivate struct DialpadChatbotWebView: UIViewRepresentable {
     let url: URL
@@ -38,6 +57,7 @@ fileprivate struct DialpadChatbotWebView: UIViewRepresentable {
 
         //  STEP 2 of 2: event name is parsed and published to the containing iOS app
         func publishEvents(event: String) {
+            print("publishEvents", event)
             switch event {
             case Notification.Name.chatbotSessionStarted.rawValue:
                 notificationCenter.post(name: Notification.Name.chatbotSessionStarted, object: nil)
@@ -58,6 +78,8 @@ fileprivate struct DialpadChatbotWebView: UIViewRepresentable {
                 selector: #selector(endChatbotSession),
                 name: Notification.Name.endChatbotSession,
                 object: nil)
+            
+            //  @event: OTHER SUPPORTED EVENTS
         }
         
         //  STEP 2 of 3: selector for NotificationCenter event
