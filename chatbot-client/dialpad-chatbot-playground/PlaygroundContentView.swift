@@ -2,9 +2,11 @@ import SwiftUI
 
 fileprivate class PlaygroundViewModel: NSObject, ObservableObject {
     @Published var isOpen = false
+    
     func close() {
         isOpen = false
     }
+    
     func open() {
         isOpen = true
     }
@@ -15,6 +17,8 @@ struct PlaygroundContentView: View {
     let fabIconUrl: String
     
     @StateObject fileprivate var viewModel = PlaygroundViewModel()
+    
+    let chatbotSessionEnded = NotificationCenter.default.publisher(for: NSNotification.Name.chatbotSessionEnded)
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -35,19 +39,29 @@ struct PlaygroundContentView: View {
                 .disabled(viewModel.isOpen)
             }
             if viewModel.isOpen {
-                DialpadChatbot(url: url)
-                    .overlay(alignment: .topTrailing, content: {
-                        Button(action: {
-                            NotificationCenter.default.post(name: Notification.Name.endChatbotSession, object: nil)
-                        }){
-                            Image(systemName: "xmark")
-                                .frame(width: 58, height: 58)
-                                .foregroundColor(Color.black)
-                                .background(Color(red: 249/255, green: 249/255, blue: 249/255))
-                                .clipShape(Circle())
-                        }.buttonStyle(PlainButtonStyle())
-                    })
+                VStack(content: {
+                    Button(action: {
+                        NotificationCenter.default.post(name: Notification.Name.endChatbotSession, object: nil)
+                    }){
+                        HStack(alignment: .lastTextBaseline, content: {
+                            Spacer()
+                            Capsule()
+                                .fill(Color.black)
+                                .frame(width: 96, height: 36, alignment: .center)
+                                .overlay(
+                                    Text("End chat")
+                                        .foregroundColor(.white)
+                                )
+                                .padding([.trailing], 4)
+                        })
+                    }.buttonStyle(PlainButtonStyle())
+                    DialpadChatbot(url: url)
+                })
             }
+        }
+        .onReceive(chatbotSessionEnded) {
+            _ in
+            viewModel.isOpen = false
         }
     }
 }
