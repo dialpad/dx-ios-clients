@@ -12,12 +12,21 @@ import WebKit
 extension Notification.Name {
     //  @incoming: a chatbot session has started
     static let chatbotSessionStarted = Notification.Name("CHATBOT_SESSION_STARTED")
-
+    
     //  @incoming: the chatbot session has ended, but the Vue app instance is alive
     static let chatbotSessionEnded = Notification.Name("CHATBOT_SESSION_ENDED")
-
+    
     //  @outgoing: end the chatbot session, but keep the Vue app instance alive
     static let endChatbotSession = Notification.Name("END_CHATBOT_SESSION")
+}
+
+/**
+ * @fileprivate
+ * @note: currently not used by the code
+ */
+fileprivate struct DXBridgeMessage: Codable {
+    let command: String
+    let event: String
 }
 
 /**
@@ -38,7 +47,7 @@ fileprivate struct DialpadChatbotWebView: UIViewRepresentable {
             self.webView = webView
             self.subscribeEvents()
         }
-
+        
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             self.webView = webView
         }
@@ -49,15 +58,24 @@ fileprivate struct DialpadChatbotWebView: UIViewRepresentable {
             _ userContentController: WKUserContentController,
             didReceive message: WKScriptMessage
         ) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                print("@dx-native-client::userContentController::\(message.body)")
-                self.publishEvents(event: message.body as! String)
+            if let messageBodyString = message.body as? String {
+                let messageBodyData = Data(messageBodyString.utf8)
+                do {
+                    if let messageBodyJSON = try JSONSerialization.jsonObject(with: messageBodyData, options: []) as? [String: Any] {
+                        if let event = messageBodyJSON["event"] as? String {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                self.publishEvents(event: event)
+                            }
+                        }
+                    }
+                } catch let error as NSError {
+                    print("@dx-native-client::error::\(error.localizedDescription)")
+                }
             }
         }
-
+        
         //  STEP 2 of 2: event name is parsed and published to the containing iOS app
         func publishEvents(event: String) {
-            print("publishEvents", event)
             switch event {
             case Notification.Name.chatbotSessionStarted.rawValue:
                 notificationCenter.post(name: Notification.Name.chatbotSessionStarted, object: nil)
@@ -94,12 +112,12 @@ fileprivate struct DialpadChatbotWebView: UIViewRepresentable {
             let messageString = String(data: messageData!, encoding: .utf8)
             
             let script = "window.dxbot.publish(\"BRIDGE_IOS_NOTIFICATION\",\(messageString ?? "[]"))"
-
+            
             self.webView?.evaluateJavaScript(script) { (result, error) in
                 if let result = result {
-                    print("dx-native-client::postMessageToWebView::info::\(result)")
+                    // no-op
                 } else if let error = error {
-                    print("dx-native-client::postMessageToWebView::error::\(error)")
+                    print("dx-native-client::error::\(error)")
                 }
             }
         }
