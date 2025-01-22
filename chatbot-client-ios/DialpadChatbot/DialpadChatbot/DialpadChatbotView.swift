@@ -11,20 +11,20 @@ import WebKit
  */
 extension Notification.Name {
     //  @incoming: a chatbot session has started
-    static let chatbotSessionStarted = Notification.Name("CHATBOT_SESSION_STARTED")
+    public static let chatbotSessionStarted = Notification.Name("CHATBOT_SESSION_STARTED")
     
     //  @incoming: the chatbot session has ended, but the Vue app instance is alive
-    static let chatbotSessionEnded = Notification.Name("CHATBOT_SESSION_ENDED")
+    public static let chatbotSessionEnded = Notification.Name("CHATBOT_SESSION_ENDED")
     
     //  @outgoing: end the chatbot session, but keep the Vue app instance alive
-    static let endChatbotSession = Notification.Name("END_CHATBOT_SESSION")
+    public static let endChatbotSession = Notification.Name("END_CHATBOT_SESSION")
 }
 
 /**
  * @fileprivate
  * @note: currently not used by the code
  */
-fileprivate struct DXBridgeMessage: Codable {
+struct DXBridgeMessage: Codable {
     let command: String
     let event: String
 }
@@ -35,10 +35,10 @@ fileprivate struct DXBridgeMessage: Codable {
  *  app and webview loading and communications. Note that this code must be implemented
  *  by the customer's native app for any cross-context communications.
  */
-fileprivate struct DialpadChatbotWebView: UIViewRepresentable {
+public struct DialpadChatbotWebView: UIViewRepresentable {
     let url: URL
     
-    class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
+    public class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
         var webView: WKWebView?
         let notificationCenter = NotificationCenter.default
         
@@ -48,13 +48,13 @@ fileprivate struct DialpadChatbotWebView: UIViewRepresentable {
             self.subscribeEvents()
         }
         
-        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             self.webView = webView
         }
         
         //  web client → iOS client
         //  STEP 1 of 2: receive events from the WKWebView that contains the chatbot script
-        func userContentController(
+        public func userContentController(
             _ userContentController: WKUserContentController,
             didReceive message: WKScriptMessage
         ) {
@@ -114,7 +114,7 @@ fileprivate struct DialpadChatbotWebView: UIViewRepresentable {
             let script = "window.dxbot.publish(\"BRIDGE_IOS_NOTIFICATION\",\(messageString ?? "[]"))"
             
             self.webView?.evaluateJavaScript(script) { (result, error) in
-                if let result = result {
+                if result != nil {
                     // no-op
                 } else if let error = error {
                     print("dx-native-client::error::\(error)")
@@ -123,11 +123,11 @@ fileprivate struct DialpadChatbotWebView: UIViewRepresentable {
         }
     }
     
-    func makeCoordinator() -> Coordinator {
+    public func makeCoordinator() -> Coordinator {
         return Coordinator()
     }
     
-    func makeUIView(context: Context) -> WKWebView {
+    public func makeUIView(context: Context) -> WKWebView {
         let coordinator = makeCoordinator()
         let userContentController = WKUserContentController()
         userContentController.add(coordinator, name: "dxbridge")
@@ -142,7 +142,7 @@ fileprivate struct DialpadChatbotWebView: UIViewRepresentable {
         return wkWebView
     }
     
-    func updateUIView(_ webView: WKWebView, context: Context) {
+    public func updateUIView(_ webView: WKWebView, context: Context) {
         // NOTE: WKWebView will load page from an URL using load(URLRequest(url: url))
         // no-op
     }
@@ -152,14 +152,18 @@ fileprivate struct DialpadChatbotWebView: UIViewRepresentable {
  * @public
  * @export
  */
-struct DialpadChatbot: View {
+public struct DialpadChatbotView: View {
     let url: String
     
-    var body: some View {
+    public init (url: String) {
+        self.url = url
+    }
+    
+    public var body: some View {
         DialpadChatbotWebView(url: URL(string: url)!)
     }
 }
 
 #Preview {
-    DialpadChatbot(url: "http://localhost:8001/public/index.html?channelid=3f3fd91bc5bf4e9ab56e53c516933337&provemail=5646620347596800@dialpad.com&site=lighthouse&env=local&native=ios")
+    DialpadChatbotView(url: "https://lighthouse.dx.dialpad.com/dxclient/dist/?provemail=3340&channelid=1b6db43e5ecf4354a9e41ccd2621b05c&native=ios")
 }
