@@ -21,21 +21,12 @@ extension Notification.Name {
 }
 
 /**
- * @fileprivate
- * @note: currently not used by the code
- */
-struct DXBridgeMessage: Codable {
-    let command: String
-    let event: String
-}
-
-/**
- * @fileprivate
+ * @public
  * @documentation: a custom UIViewRepresentable that implements the crux of native
  *  app and webview loading and communications. Note that this code must be implemented
  *  by the customer's native app for any cross-context communications.
  */
-public struct DialpadChatbotWebView: UIViewRepresentable {
+public struct DialpadChatbotUIView: UIViewRepresentable {
     let url: URL
     
     public class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
@@ -110,7 +101,6 @@ public struct DialpadChatbotWebView: UIViewRepresentable {
         func postMessageToWebView(messageDict: [String: String]) {
             let messageData = try? JSONSerialization.data(withJSONObject: messageDict, options: [])
             let messageString = String(data: messageData!, encoding: .utf8)
-            
             let script = "window.dxbot.publish(\"BRIDGE_IOS_NOTIFICATION\",\(messageString ?? "[]"))"
             
             self.webView?.evaluateJavaScript(script) { (result, error) in
@@ -150,7 +140,7 @@ public struct DialpadChatbotWebView: UIViewRepresentable {
 
 /**
  * @public
- * @export
+ * @documentation: a custom View that gets initiated from the main iOS app
  */
 public struct DialpadChatbotView: View {
     let url: String
@@ -160,10 +150,16 @@ public struct DialpadChatbotView: View {
     }
     
     public var body: some View {
-        DialpadChatbotWebView(url: URL(string: url)!)
+        DialpadChatbotUIView(url: URL(string: url)!)
     }
 }
 
+/**
+ * @docummentation: https://light...dialpad.com/dxclient/dist/...native=ios
+ * in the #Preview is a beta env URL, which may not work without Dialpad VPN. You may replace it
+ * with your production URL, which can be obtained from the Digital Experience admin pages.
+ * Alternatively, you can reach out to the professional services team to get your production URL.
+ */
 #Preview {
     DialpadChatbotView(url: "https://lighthouse.dx.dialpad.com/dxclient/dist/?provemail=3340&channelid=1b6db43e5ecf4354a9e41ccd2621b05c&native=ios")
 }
