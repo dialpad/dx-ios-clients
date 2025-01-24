@@ -70,7 +70,13 @@ Select the top-level main app in Xcode and go the section containing the `Framew
 
 ##### #8
 
-At this point you can modify your application code to launch and manage the `Ai Chatbot`. We recommend you to take a look at the starter code in the file named [`ContentView.swift`](./chatbot-client-ios/Example/Example/ContentView.swift). Here are three key points -
+At this point you can modify your application code to launch and manage the `Ai Chatbot`. We recommend you to take a look at the starter code in the file named [`ContentView.swift`](./chatbot-client-ios/Example/Example/ContentView.swift). Here are 4 key points -
+
+In LN02: the `DialpadChatbot` framework is getting imported into your code
+
+```swift
+import DialpadChatbot
+```
 
 In LN102: the `DialpadChatbotView` is getting initialized by passing an URL.
 
