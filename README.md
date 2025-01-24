@@ -46,7 +46,7 @@ Locate the project's workspace file [`DialpadChatbot.xcworkspace`](./chatbot-cli
 - Locate the `Swift` file named [`ExampleApp.swift`](./chatbot-client-ios/Example/Example/ExampleApp.swift) and replace the `url` parameter with your chatbot's production URL. You can get long URL with `&native=ios` param from the Digital Experience admin pages.
 - Run: ⌘ + ⇧ + K (command + shift + K) to clean the app build.
 - Run: ⌘ + B (command + B) to build the the example app.
-- Run: ⌘ + B (command + R) to run the selected scheme in your simulator, or the connected `iPhone` with `iOS` v16+.
+- Run: ⌘ + R (command + R) to run the selected scheme in your simulator, or the connected `iPhone` with `iOS` v16+.
 
 > **Quick Check**: a successful build and run should look something like this -
 
@@ -54,7 +54,7 @@ Locate the project's workspace file [`DialpadChatbot.xcworkspace`](./chatbot-cli
 
 ##### #5
 
-Locate a subdirectory named [`DialpadChatbot`](./chatbot-client-ios/DialpadChatbot) in the Finder. This subdirectory contains the `Swift` framework for the chatbot
+Locate the subdirectory named [`DialpadChatbot`](./chatbot-client-ios/DialpadChatbot) in the Finder. This subdirectory contains the `Swift` framework for the chatbot
 
 ##### #6
 
@@ -70,7 +70,7 @@ Select the top-level main app in Xcode and go the section containing the `Framew
 
 ##### #8
 
-Add this point you can modify your application code to launch and manage the `Ai Chatbot`. We recommend you to take a look at the starter code in the file named [`ContentView.swift`](./chatbot-client-ios/Example/Example/ContentView.swift). Here are three key points -
+At this point you can modify your application code to launch and manage the `Ai Chatbot`. We recommend you to take a look at the starter code in the file named [`ContentView.swift`](./chatbot-client-ios/Example/Example/ContentView.swift). Here are three key points -
 
 In LN102: the `DialpadChatbotView` is getting initialized by passing an URL.
 
