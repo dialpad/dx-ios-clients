@@ -16,7 +16,7 @@ fileprivate class ViewModel: NSObject, ObservableObject {
 struct ContentView: View {
     let url: String
     let chatbotSessionEnded = NotificationCenter.default.publisher(for: NSNotification.Name.chatbotSessionEnded)
-    
+
     @StateObject fileprivate var viewModel = ViewModel()
     
     var backgroundColor: Color {

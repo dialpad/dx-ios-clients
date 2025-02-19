@@ -8,7 +8,7 @@ import NotificationCenter
  *  - incoming event CHATBOT_SESSION_ENDED
  *  - outgoing event END_CHATBOT_SESSION
  */
-extension Notification.Name {
+public extension Notification.Name {
     //  @incoming: a chatbot session has started
     public static let chatbotSessionStarted = Notification.Name("CHATBOT_SESSION_STARTED")
     
