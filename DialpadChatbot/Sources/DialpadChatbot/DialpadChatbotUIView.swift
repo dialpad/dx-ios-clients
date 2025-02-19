@@ -1,24 +1,6 @@
+import UIKit
 import SwiftUI
 import WebKit
-
-/**
- * @public
- * @documentation: a subset of Message Bus events supported by the native iOS app.
- *  supported events are:
- *  - incoming event CHATBOT_SESSION_STARTED
- *  - incoming event CHATBOT_SESSION_ENDED
- *  - outgoing event END_CHATBOT_SESSION
- */
-extension Notification.Name {
-    //  @incoming: a chatbot session has started
-    public static let chatbotSessionStarted = Notification.Name("CHATBOT_SESSION_STARTED")
-    
-    //  @incoming: the chatbot session has ended, but the Vue app instance is alive
-    public static let chatbotSessionEnded = Notification.Name("CHATBOT_SESSION_ENDED")
-    
-    //  @outgoing: end the chatbot session, but keep the Vue app instance alive
-    public static let endChatbotSession = Notification.Name("END_CHATBOT_SESSION")
-}
 
 /**
  * @public
@@ -136,30 +118,4 @@ public struct DialpadChatbotUIView: UIViewRepresentable {
         // NOTE: WKWebView will load page from an URL using load(URLRequest(url: url))
         // no-op
     }
-}
-
-/**
- * @public
- * @documentation: a custom View that gets initiated from the main iOS app
- */
-public struct DialpadChatbotView: View {
-    let url: String
-    
-    public init (url: String) {
-        self.url = url
-    }
-    
-    public var body: some View {
-        DialpadChatbotUIView(url: URL(string: url)!)
-    }
-}
-
-/**
- * @docummentation: https://light...dialpad.com/dxclient/dist/...native=ios
- * in the #Preview is a beta env URL, which may not work without Dialpad VPN. You may replace it
- * with your production URL, which can be obtained from the Digital Experience admin pages.
- * Alternatively, you can reach out to the professional services team to get your production URL.
- */
-#Preview {
-    DialpadChatbotView(url: "https://lighthouse.dx.dialpad.com/dxclient/dist/?provemail=3340&channelid=1b6db43e5ecf4354a9e41ccd2621b05c&native=ios")
 }
