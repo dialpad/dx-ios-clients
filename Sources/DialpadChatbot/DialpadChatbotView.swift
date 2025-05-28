@@ -23,5 +23,5 @@ public struct DialpadChatbotView: View {
  * Alternatively, you can reach out to the professional services team to get your production URL.
  */
 #Preview {
-    DialpadChatbotView(url: "https://lighthouse.dx.dialpad.com/dxclient/dist/?provemail=3340&channelid=1b6db43e5ecf4354a9e41ccd2621b05c&native=ios")
+    DialpadChatbotView(url: "https://lighthouse.dx.dialpad.com/dxclient/dist/?provemail=3340&channelid=c4f4da7a350a478cb723441b3cc4c738&native=ios")
 }
