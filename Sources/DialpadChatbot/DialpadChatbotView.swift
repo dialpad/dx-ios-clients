@@ -17,10 +17,7 @@ public struct DialpadChatbotView: View {
 }
 
 /**
- * @docummentation: https://light...dialpad.com/dxclient/dist/...native=ios
- * in the #Preview is a beta env URL, which may not work without Dialpad VPN. You may replace it
- * with your production URL, which can be obtained from the Digital Experience admin pages.
- * Alternatively, you can reach out to the professional services team to get your production URL.
+ * @docummentation: replace url in the #Preview with your WebChat channel URL.
  */
 #Preview {
     DialpadChatbotView(url: "https://lighthouse.dx.dialpad.com/dxclient/dist/?provemail=3340&channelid=c4f4da7a350a478cb723441b3cc4c738&native=ios")
